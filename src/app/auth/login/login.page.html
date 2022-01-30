@@ -1,7 +1,13 @@
 <div class="container" #container>
   <div class="forms-container">
     <div class="signin-signup">
-      <form autocomplete="off" action="" class="sign-in-form">
+      <form
+        autocomplete="off"
+        action=""
+        class="sign-in-form"
+        [formGroup]="formLogin"
+        (ngSubmit)="onSubmitFormLogin()"
+      >
         <!-- <img
           src="../../../assets/images/My Post.png"
           width="200px"
@@ -12,48 +18,130 @@
         <h2 class="title">Iniciar sesión</h2>
         <div class="input-field">
           <i class="fas fa-user"></i>
-          <input type="email" placeholder="Usuario" />
+          <input
+            type="email"
+            class="form-control"
+            formControlName="userName"
+            placeholder="Usuario"
+            [class.is-invalid]="isEmailInvalid"
+          />
         </div>
+        <small class="text-danger" *ngIf="isEmailInvalid"
+          >El email es requerido - debe ser un correo valido</small
+        >
 
         <div class="input-field">
           <i class="fas fa-lock"></i>
-          <input type="password" placeholder="Contraseña" />
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Contraseña"
+            [class.is-invalid]="isPasswordInvalid"
+          />
         </div>
+        <small class="text-danger" *ngIf="isPasswordInvalid"
+          >La contraseña es obligatoria</small
+        >
+
         <input type="submit" value="Login" class="btn solid" />
+        <small class="text-danger d-flex justify-content-center" *ngIf="message"
+          >{{message}}</small
+        >
       </form>
 
-      <form action="" class="sign-up-form">
+      <form
+        action=""
+        class="sign-up-form"
+        [formGroup]="formRegister"
+        (ngSubmit)="onSubmitFormRegister()"
+      >
         <h2 class="title">Registrarse</h2>
+
         <div class="input-field">
           <i class="fas fa-signature"></i>
-          <input type="text" placeholder="Nombres" />
+          <input
+            type="text"
+            [class.form-control]="isNameInvalid"
+            placeholder="Nombres"
+            formControlName="nombres"
+            [class.is-invalid]="isNameInvalid"
+          />
         </div>
+        <small class="text-danger" *ngIf="isNameInvalid"
+          >El nombre es requerido</small
+        >
+
         <div class="input-field">
           <i class="fas fa-signature"></i>
-          <input type="text" placeholder="Apellidos" />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Apellidos"
+            formControlName="apellidos"
+            [class.is-invalid]="isLastNameInvalid"
+          />
         </div>
+        <small class="text-danger" *ngIf="isLastNameInvalid"
+          >El apellido es requerido</small
+        >
 
         <div class="input-field">
           <i class="fas fa-id-card"></i>
           <input
             type="text"
+            class="form-control"
             pattern="^[0-9]+$"
             placeholder="Número de identificación"
             title="El valor debe ser númerico"
+            formControlName="documento"
+            [class.is-invalid]="isDocumentInvalid"
           />
         </div>
 
+        <small class="text-danger" *ngIf="isDocumentInvalid"
+          >El documento es requerido de tipo númerico</small
+        >
+
         <div class="input-field">
           <i class="fas fa-envelope"></i>
-          <input type="email" placeholder="Usuario/email" />
+          <input
+            class="form-control"
+            type="email"
+            placeholder="Usuario/email"
+            formControlName="email"
+            [class.is-invalid]="isEmailInvalid"
+          />
         </div>
+
+        <small class="text-danger" *ngIf="isEmailInvalid"
+          >El email es requerido - debe ser un correo valido</small
+        >
 
         <div class="input-field">
           <i class="fas fa-lock"></i>
-          <input type="password" placeholder="Contraseña" />
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Contraseña"
+            formControlName="password"
+            [class.is-invalid]="isPasswordInvalid"
+          />
         </div>
+
+        <small class="text-danger" *ngIf="isPasswordInvalid"
+          >La contraseña es obligatoria</small
+        >
+
         <input type="submit" value="Registrarse" class="btn solid" />
       </form>
+      <div class="d-flex justify-content-center">
+        <ul>
+          <li class="text-danger" *ngFor="let item of identityError">
+            {{item.description}}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -96,4 +184,10 @@
       />
     </div>
   </div>
+  <dx-toast
+    [(visible)]="isVisible"
+    [type]="type"
+    [message]="'Usuario inicio sesión'"
+  >
+  </dx-toast>
 </div>

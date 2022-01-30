@@ -1,4 +1,7 @@
-<app-drawer *ngIf="isLogin">
+<app-drawer *ngIf="isLogin$ | async; else name">
   <router-outlet></router-outlet>
 </app-drawer>
-<!-- <router-outlet></router-outlet> -->
+
+<ng-template #name>
+  <router-outlet></router-outlet>
+</ng-template>

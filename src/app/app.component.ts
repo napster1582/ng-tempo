@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AuthService } from './@core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +10,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'tempo-app';
 
-  isLogin = true;
+  isLogin$: Observable<boolean>;
+
+  constructor(private authService: AuthService) {
+    this.isLogin$ = this.authService.isLoggedIn;
+  }
 }
