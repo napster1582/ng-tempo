@@ -6,7 +6,10 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Response } from '../interfaces/response';
+import { UserInfo } from '../interfaces/user-info';
+import { Empleados } from '../models/empleados.model';
 import { LoginUser } from '../models/login-user.model';
+import { RegisterUser } from '../models/register-user.model';
 
 const helper = new JwtHelperService();
 
@@ -21,16 +24,24 @@ export class AuthService extends NgxGenericRestService {
     this.checkToken();
   }
 
+  registerUser(registerUser: RegisterUser): Observable<Response> {
+    return this.add<any>(registerUser, {
+      urlPostfix: 'Register',
+      mapFn: (response) => response as Response,
+    });
+  }
+
   loginUser(loginUser: LoginUser): Observable<Response> {
     return this.add<any>(loginUser, {
       urlPostfix: 'Login',
       mapFn: (response) => response,
     }).pipe(
       map((res: Response) => {
-        const { token }: { token: string } = res.result;
+        const { token, user, empleados } = res.result;
 
         if (res.isSuccess) {
           this.saveToken(token);
+          this.saveUserInfo(user, empleados);
           this.loggedIn.next(true);
           return res;
         } else return res;
@@ -41,6 +52,7 @@ export class AuthService extends NgxGenericRestService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
     this.loggedIn.next(false);
     this.router.navigate(['/auth/login']);
   }
@@ -51,6 +63,18 @@ export class AuthService extends NgxGenericRestService {
 
   saveToken(token: string) {
     localStorage.setItem('token', token);
+  }
+
+  saveUserInfo(user: RegisterUser, empleado: Empleados) {
+    const userInfo: UserInfo = {
+      idEmpleado: empleado.id,
+      nombres: empleado.nombres,
+      apellidos: empleado.apellidos,
+      documento: empleado.documento,
+      email: user.email,
+      idUser: empleado.idUser,
+    };
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
   }
 
   private checkToken(): void {

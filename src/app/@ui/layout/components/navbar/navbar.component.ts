@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserInfo } from 'src/app/@core/interfaces/user-info';
 import { AuthService } from 'src/app/@core/services/auth.service';
 
 @Component({
@@ -7,11 +9,19 @@ import { AuthService } from 'src/app/@core/services/auth.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  userInfo!: UserInfo;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  }
 
   ngOnInit(): void {}
 
   onClickClosedSesion() {
     this.authService.logout();
+  }
+
+  navegarActividades() {
+    this.router.navigate(['/actividades/dashboard']);
   }
 }

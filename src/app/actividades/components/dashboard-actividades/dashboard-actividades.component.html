@@ -1,0 +1,48 @@
+<dx-data-grid
+  #actividadesDataGrid
+  [dataSource]="dataSource"
+  [wordWrapEnabled]="true"
+  [showBorders]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event)"
+  (onRowUpdated)="onRowUpdatedActividad($event)"
+  (onRowInserted)="onRowUpdatedActividad($event)"
+  (onRowRemoved)="onRowRemovedActividad($event)"
+>
+  <!-- opciones -->
+  <dxo-search-panel [visible]="true" [width]="300"></dxo-search-panel>
+  <dxo-export [enabled]="true" fileName="Actividad"></dxo-export>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[10, 20, 30, 40, 50]"
+    [showInfo]="true"
+  >
+  </dxo-pager>
+  <!-- opciones end -->
+
+  <dxo-editing
+    mode="form"
+    [allowUpdating]="true"
+    [allowDeleting]="true"
+    [allowAdding]="true"
+  >
+  </dxo-editing>
+
+  <dxi-column
+    dataField="descripcion"
+    caption="Descripción de la actividad"
+  ></dxi-column>
+
+  <dxi-column type="buttons">
+    <dxi-button text="Editar" name="edit"></dxi-button>
+    <dxi-button text="Eliminar" name="delete"></dxi-button>
+    <dxi-button
+      text="Agregar horas"
+      [onClick]="onClickAgregarHoras"
+    ></dxi-button>
+  </dxi-column>
+</dx-data-grid>

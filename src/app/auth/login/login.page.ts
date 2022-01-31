@@ -1,12 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { custom } from 'devextreme/ui/dialog';
-import { Observable } from 'rxjs';
-import { Response } from 'src/app/@core/interfaces/response';
 import { LoginUser } from 'src/app/@core/models/login-user.model';
 import { RegisterUser } from 'src/app/@core/models/register-user.model';
 import { AuthService } from 'src/app/@core/services/auth.service';
+import swal from 'sweetalert2';
 
 interface IdentityError {
   code: string;
@@ -66,13 +64,6 @@ export class LoginPage implements OnInit {
 
   //#region servicios
 
-  private registerUser(registerUser: RegisterUser): Observable<Response> {
-    return this.authService.add<any>(registerUser, {
-      urlPostfix: 'Register',
-      mapFn: (response) => response as Response,
-    });
-  }
-
   //#endregion
 
   //#region  Eventos
@@ -120,26 +111,19 @@ export class LoginPage implements OnInit {
   }
 
   onSubmitFormRegister() {
-    console.log(
-      '🚀 ~ file: login.page.ts ~ line 71 ~ LoginPage ~ guardarRegistro ~ this.formRegister',
-      this.formRegister
-    );
-
     this.userRegister = {
       ...(this.formRegister.value as RegisterUser),
       rol: '',
     };
-    this.registerUser(this.userRegister).subscribe(
-      ({ isSuccess, message, result }) => {
+    this.authService
+      .registerUser(this.userRegister)
+      .subscribe(({ isSuccess, message, result }) => {
         if (isSuccess) {
-          // this.message = message;
-          // this.isVisible = isSuccess;
-          this.onClickSignIn();
+          this.showAlertRegister();
         } else {
           this.identityError = result;
         }
-      }
-    );
+      });
   }
 
   onSubmitFormLogin() {
@@ -191,33 +175,19 @@ export class LoginPage implements OnInit {
     });
   }
 
-  private async showMessageRegisterSuccessfull() {
-    const confirmDialog = custom({
-      title: 'BIENVENIDO',
-      messageHtml: 'Registro exitoso puede iniciar sesión',
-      buttons: [
-        {
-          text: 'Aceptar',
-          type: 'success',
-          onClick: (e) => {
-            return true;
-          },
-        },
-        {
-          text: 'Cancelar',
-          type: 'danger',
-          onClick: (e) => {
-            return false;
-          },
-        },
-      ],
-    });
-    confirmDialog.show().then(async (dialogResult: boolean) => {
-      console.log(
-        '🚀 ~ file: login.page.ts ~ line 193 ~ LoginPage ~ confirmDialog.show ~ dialogResult',
-        dialogResult
-      );
-    });
+  private showAlertRegister() {
+    swal
+      .fire({
+        title: '¡Bienvenido...!',
+        text: 'Registro exitoso puede iniciar sesión',
+        icon: 'success',
+        confirmButtonText: 'Ir al inicio de sesión',
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.onClickSignIn();
+        }
+      });
   }
 
   //#endregion

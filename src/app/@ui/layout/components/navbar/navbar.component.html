@@ -21,9 +21,15 @@
           <a class="nav-link active" aria-current="page" href="#">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Actividades</a>
+          <a class="nav-link active" href="/actividades/dashboard"
+            >Actividades</a
+          >
         </li>
       </ul>
+
+      <div class="text-light">
+        <small>Hola {{ userInfo.nombres }} {{ userInfo.apellidos }}</small>
+      </div>
 
       <button class="btn btn-danger" (click)="onClickClosedSesion()">
         Cerrar sesión

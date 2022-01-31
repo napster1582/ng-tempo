@@ -1,0 +1,109 @@
+<div class="container mt-5">
+  <dx-form
+    #formDetalle
+    [(formData)]="detalleActividadForm"
+    id="formDetalle"
+    class="form-inline d-block"
+    [showColonAfterLabel]="false"
+  >
+    <dxi-item itemType="group" caption="Horas de dedicación" [colCount]="2">
+      <dxi-item
+        dataField="fecha"
+        editorType="dxDateBox"
+        [editorOptions]="{
+        width: '100%',
+        min: fechaActual,
+        value:fechaActual
+     }"
+      >
+        <dxo-label text="Fecha"></dxo-label>
+        <dxi-validation-rule
+          type="required"
+          message="Campo obligatorio"
+        ></dxi-validation-rule>
+      </dxi-item>
+
+      <dxi-item
+        dataField="horas"
+        editorType="dxNumberBox"
+        [editorOptions]="{
+         value:1,
+         min: 1,
+         showSpinButtons: true,
+         showClearButton: true,
+         onValueChanged:onValueChangedHours
+        }"
+      >
+        <dxi-validation-rule
+          type="required"
+          message="Campo obligatorio"
+        ></dxi-validation-rule>
+        <dxo-label text="Tiempo de dedicación (en horas)"></dxo-label>
+      </dxi-item>
+    </dxi-item>
+
+    <dxi-item
+      itemType="group"
+      class="d-lg-flex justify-content-center mt-5"
+      [colSpan]="2"
+    >
+      <dx-button
+        text="Agregar"
+        [type]="'success'"
+        icon="save"
+        (onClick)="onClickGuardarFormulario()"
+      ></dx-button>
+    </dxi-item>
+  </dx-form>
+
+  <div class="mt-5">
+    <dx-data-grid
+      [dataSource]="horasActividad"
+      [wordWrapEnabled]="true"
+      [showBorders]="true"
+      (onRowUpdated)="onRowUpdatedHorasActividad($event)"
+    >
+      <dxo-editing
+        mode="popup"
+        [allowUpdating]="true"
+        [allowDeleting]="false"
+        [allowAdding]="false"
+      >
+      </dxo-editing>
+
+      <dxi-column
+        dataField="fecha"
+        caption="Fecha"
+        dataType="date"
+      ></dxi-column>
+
+      <dxi-column
+        dataField="horas"
+        caption="Tiempo de dedicación (en horas)"
+        [visible]="true"
+      >
+        <dxo-form-item
+          editorType="dxNumberBox"
+          [editorOptions]="{
+          min: 1,
+          max: 8,
+          showSpinButtons: true,
+          showClearButton:true
+
+          
+        }"
+        >
+        </dxo-form-item>
+      </dxi-column>
+    </dx-data-grid>
+  </div>
+
+  <div class="d-flex justify-content-center mt-5">
+    <dx-button
+      text="Regresar"
+      [type]="'default'"
+      icon="back"
+      (onClick)="onClickPrevious()"
+    ></dx-button>
+  </div>
+</div>
